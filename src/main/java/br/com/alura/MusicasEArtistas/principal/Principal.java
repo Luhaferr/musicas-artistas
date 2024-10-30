@@ -9,6 +9,7 @@ import br.com.alura.MusicasEArtistas.repository.MusicRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -69,7 +70,7 @@ public class Principal {
         String cadastrarNovo = "S";
 
         while (cadastrarNovo.equalsIgnoreCase("S")) {
-            System.out.println("Informe o nome desse artista: ");
+            System.out.println("Informe o nome do artista: ");
             String nome = scanner.nextLine();
             System.out.println("Informe a categoria desse artista: (solo, dupla ou banda)");
             String tipo = scanner.nextLine();
@@ -79,6 +80,7 @@ public class Principal {
             Genero genero = Genero.valueOf(generomMusical.toUpperCase());
             System.out.println("Informe o total de albuns desse artista: ");
             int albuns = scanner.nextInt();
+            scanner.nextLine();
             Artista artista = new Artista(nome, categoria, genero, albuns);
             artistRepository.save(artista);
             System.out.println("Cadastrar novo artista? (S/N)");
@@ -88,8 +90,31 @@ public class Principal {
 
     private void cadastrarMusicas() {
         System.out.println("Essa música é de qual artista?");
-        //VERIFICAR SE ARTISTA JÁ ESTÁ CADASTRADO
-        //ASSOCIAR ESSE ARTISTA DO BR À MUSICA
+        String nomeArtista = scanner.nextLine();
+
+        Optional<Artista> artistaBuscado = artistRepository.findByNomeContainingIgnoreCase(nomeArtista);
+
+        if (artistaBuscado.isPresent()) {
+            Artista artista = artistaBuscado.get();
+
+            System.out.println("Qual o nome da música?");
+            String nomeMusica = scanner.nextLine();
+            System.out.println("Qual o ano de lançamento?");
+            int ano = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Qual sua avaliação sobre a música?");
+            Double avaliacao = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.println("Qual o gênero dessa música?");
+            Genero generoMusical = Genero.valueOf(scanner.nextLine().toUpperCase());
+            Musica musica = new Musica(nomeMusica, artista, ano, avaliacao, generoMusical);
+            musicRepository.save(musica);
+
+        } else {
+            System.out.println("Artista não encontrado! Cadastre um artista primeiro");
+            cadastrarArtistas();
+        }
+
     }
 
     private void pesquisarMusicasPorArtista() {

@@ -12,7 +12,7 @@ public class Musica {
     private String nome;
     @ManyToOne
     private Artista artista;
-    private LocalDate anoLancamento;
+    private Integer anoLancamento;
     private Double avaliacao;
     @Enumerated(EnumType.STRING)
     private Genero genero;
@@ -20,7 +20,7 @@ public class Musica {
     public Musica() {
     }
 
-    public Musica(String nome, Artista artista, LocalDate anoLancamento, Double avaliacao, Genero genero) {
+    public Musica(String nome, Artista artista, Integer anoLancamento, Double avaliacao, Genero genero) {
         this.nome = nome;
         this.artista = artista;
         this.anoLancamento = anoLancamento;
@@ -52,11 +52,11 @@ public class Musica {
         this.artista = artista;
     }
 
-    public LocalDate getAnoLancamento() {
+    public Integer getAnoLancamento() {
         return anoLancamento;
     }
 
-    public void setAnoLancamento(LocalDate anoLancamento) {
+    public void setAnoLancamento(Integer anoLancamento) {
         this.anoLancamento = anoLancamento;
     }
 
