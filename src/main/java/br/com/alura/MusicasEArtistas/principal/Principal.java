@@ -1,8 +1,11 @@
 package br.com.alura.MusicasEArtistas.principal;
 
 import br.com.alura.MusicasEArtistas.model.Artista;
+import br.com.alura.MusicasEArtistas.model.Categoria;
+import br.com.alura.MusicasEArtistas.model.Genero;
 import br.com.alura.MusicasEArtistas.model.Musica;
 import br.com.alura.MusicasEArtistas.repository.ArtistRepository;
+import br.com.alura.MusicasEArtistas.repository.MusicRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +15,12 @@ public class Principal {
     private Scanner scanner = new Scanner(System.in);
     private List<Artista> artistas = new ArrayList<>();
     private List<Musica> musicas = new ArrayList<>();
-    private ArtistRepository repository;
+    private ArtistRepository artistRepository;
+    private MusicRepository musicRepository;
 
-    public Principal(ArtistRepository repository) {
-        this.repository = repository;
+    public Principal(ArtistRepository ArtistRepository, MusicRepository musicRepository) {
+        this.artistRepository = ArtistRepository;
+        this.musicRepository = musicRepository;
     }
 
     public void exibirMenu() {
@@ -61,9 +66,30 @@ public class Principal {
     }
 
     private void cadastrarArtistas() {
+        String cadastrarNovo = "S";
+
+        while (cadastrarNovo.equalsIgnoreCase("S")) {
+            System.out.println("Informe o nome desse artista: ");
+            String nome = scanner.nextLine();
+            System.out.println("Informe a categoria desse artista: (solo, dupla ou banda)");
+            String tipo = scanner.nextLine();
+            Categoria categoria = Categoria.valueOf(tipo.toUpperCase());
+            System.out.println("Informe o gênero musical desse artista: ");
+            String generomMusical = scanner.nextLine();
+            Genero genero = Genero.valueOf(generomMusical.toUpperCase());
+            System.out.println("Informe o total de albuns desse artista: ");
+            int albuns = scanner.nextInt();
+            Artista artista = new Artista(nome, categoria, genero, albuns);
+            artistRepository.save(artista);
+            System.out.println("Cadastrar novo artista? (S/N)");
+            cadastrarNovo = scanner.nextLine();
+        }
     }
 
     private void cadastrarMusicas() {
+        System.out.println("Essa música é de qual artista?");
+        //VERIFICAR SE ARTISTA JÁ ESTÁ CADASTRADO
+        //ASSOCIAR ESSE ARTISTA DO BR À MUSICA
     }
 
     private void pesquisarMusicasPorArtista() {
@@ -73,5 +99,11 @@ public class Principal {
     }
 
     private void listarMusica() {
+        List<Musica> musicaList = musicRepository.findAll();
+        if (musicaList.isEmpty()) {
+            System.out.println("Nenhuma música encontrada!");
+        } else {
+            musicaList.forEach(System.out::println);
+        }
     }
 }
