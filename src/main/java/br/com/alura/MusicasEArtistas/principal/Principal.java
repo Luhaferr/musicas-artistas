@@ -96,7 +96,6 @@ public class Principal {
 
         if (artistaBuscado.isPresent()) {
             Artista artista = artistaBuscado.get();
-
             System.out.println("Qual o nome da música?");
             String nomeMusica = scanner.nextLine();
             System.out.println("Qual o ano de lançamento?");
@@ -114,21 +113,35 @@ public class Principal {
             System.out.println("Artista não encontrado! Cadastre um artista primeiro");
             cadastrarArtistas();
         }
-
     }
 
     private void pesquisarMusicasPorArtista() {
+        System.out.println("Digite o nome do artista para ver sua coleção de músicas");
+        String nomeArtista = scanner.nextLine();
+
+        Optional<Artista> artistaBuscado = artistRepository.findByNomeContainingIgnoreCase(nomeArtista);
+        if (artistaBuscado.isPresent()) {
+            Artista artista = artistaBuscado.get();
+            System.out.println("Artista: " + artista.getNome() + " - " + "Músicas: " + artista.getMusicas());
+        } else {
+            System.out.println("Artista não encontrado");
+        }
     }
 
     private void pesquisarMusicasPorAno() {
+        System.out.println("Você quer buscar as músicas de qual ano?");
+        int ano = scanner.nextInt();
+        scanner.nextLine();
+        musicas = musicRepository.findByAnoLancamento(ano);
+        musicas.forEach(m -> System.out.println("Título: " + m.getTitulo() + " - Artista: " + m.getArtista().getNome() + " - Gênero: " + m.getGenero() + " - Avaliação: " + m.getAvaliacao()));
     }
 
     private void listarMusica() {
-        List<Musica> musicaList = musicRepository.findAll();
-        if (musicaList.isEmpty()) {
+        artistas = artistRepository.findAll();
+        if (artistas.isEmpty()) {
             System.out.println("Nenhuma música encontrada!");
         } else {
-            musicaList.forEach(System.out::println);
+            artistas.forEach(System.out::println);
         }
     }
 }

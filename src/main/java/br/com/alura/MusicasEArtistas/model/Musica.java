@@ -2,14 +2,12 @@ package br.com.alura.MusicasEArtistas.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
 public class Musica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String titulo;
     @ManyToOne
     private Artista artista;
     private Integer anoLancamento;
@@ -20,8 +18,8 @@ public class Musica {
     public Musica() {
     }
 
-    public Musica(String nome, Artista artista, Integer anoLancamento, Double avaliacao, Genero genero) {
-        this.nome = nome;
+    public Musica(String titulo, Artista artista, Integer anoLancamento, Double avaliacao, Genero genero) {
+        this.titulo = titulo;
         this.artista = artista;
         this.anoLancamento = anoLancamento;
         this.avaliacao = avaliacao;
@@ -36,12 +34,12 @@ public class Musica {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public Artista getArtista() {
@@ -79,8 +77,7 @@ public class Musica {
     @Override
     public String toString() {
         return "Musica{" +
-                ", nome='" + nome + '\'' +
-                ", artista=" + artista +
+                ", titulo='" + titulo + '\'' +
                 ", anoLancamento=" + anoLancamento +
                 ", avaliacao=" + avaliacao +
                 ", genero=" + genero +
