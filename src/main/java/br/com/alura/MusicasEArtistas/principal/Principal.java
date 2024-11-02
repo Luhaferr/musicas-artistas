@@ -1,12 +1,11 @@
 package br.com.alura.MusicasEArtistas.principal;
 
-import br.com.alura.MusicasEArtistas.model.Artista;
-import br.com.alura.MusicasEArtistas.model.Categoria;
-import br.com.alura.MusicasEArtistas.model.Genero;
-import br.com.alura.MusicasEArtistas.model.Musica;
+import br.com.alura.MusicasEArtistas.model.*;
+import br.com.alura.MusicasEArtistas.repository.AlbumRepository;
 import br.com.alura.MusicasEArtistas.repository.ArtistRepository;
 import br.com.alura.MusicasEArtistas.repository.MusicRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +17,13 @@ public class Principal {
     private List<Musica> musicas = new ArrayList<>();
     private ArtistRepository artistRepository;
     private MusicRepository musicRepository;
+    private AlbumRepository albumRepository;
+    private Artista artista;
 
-    public Principal(ArtistRepository ArtistRepository, MusicRepository musicRepository) {
+    public Principal(ArtistRepository ArtistRepository, MusicRepository musicRepository, AlbumRepository albumRepository) {
         this.artistRepository = ArtistRepository;
         this.musicRepository = musicRepository;
+        this.albumRepository = albumRepository;
     }
 
     public void exibirMenu() {
@@ -33,6 +35,7 @@ public class Principal {
                     3 - Pesquisar músicas por artistas
                     4 - Pesquisar músicas por ano de lançamento
                     5 - Listar músicas
+                    6 - Cadastrar album
                     
                     0 - Sair
                     """;
@@ -57,6 +60,9 @@ public class Principal {
                 case 5:
                     listarMusica();
                     break;
+                case 6:
+                    cadastrarAlbum();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -78,10 +84,7 @@ public class Principal {
             System.out.println("Informe o gênero musical desse artista: ");
             String generomMusical = scanner.nextLine();
             Genero genero = Genero.valueOf(generomMusical.toUpperCase());
-            System.out.println("Informe o total de albuns desse artista: ");
-            int albuns = scanner.nextInt();
-            scanner.nextLine();
-            Artista artista = new Artista(nome, categoria, genero, albuns);
+            Artista artista = new Artista(nome, categoria, genero);
             artistRepository.save(artista);
             System.out.println("Cadastrar novo artista? (S/N)");
             cadastrarNovo = scanner.nextLine();
@@ -109,6 +112,26 @@ public class Principal {
             Musica musica = new Musica(nomeMusica, artista, ano, avaliacao, generoMusical);
             musicRepository.save(musica);
 
+        } else {
+            System.out.println("Artista não encontrado! Cadastre um artista primeiro");
+            cadastrarArtistas();
+        }
+    }
+
+    private void cadastrarAlbum() {
+        System.out.println("Digite o nome do artista para ver sua coleção de albuns");
+        String nomeArtista = scanner.nextLine();
+
+        Optional<Artista> artistaBuscado = artistRepository.findByNomeContainingIgnoreCase(nomeArtista);
+        if (artistaBuscado.isPresent()) {
+            Artista artista = artistaBuscado.get();
+            System.out.println("Qual o nome do album?");
+            String nomeAlbum = scanner.nextLine();
+            System.out.println("Qual o ano de lançamento?");
+            int ano = scanner.nextInt();
+            scanner.nextLine();
+            Album album = new Album(nomeAlbum, artista, ano);
+            albumRepository.save(album);
         } else {
             System.out.println("Artista não encontrado! Cadastre um artista primeiro");
             cadastrarArtistas();

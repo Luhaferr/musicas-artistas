@@ -15,18 +15,28 @@ public class Artista {
     private Categoria tipo;
     @Enumerated(EnumType.STRING)
     private Genero genero;
-    private int totalAlbuns;
+    @OneToMany
+    private List<Album> albuns;
     @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Musica> musicas;
+
+    public List<Album> getAlbuns() {
+        return albuns;
+    }
+
+    public void setAlbuns(List<Album> albuns) {
+        albuns.forEach(a -> a.setArtista(this));
+        this.albuns = albuns;
+    }
 
     public Artista() {
     }
 
-    public Artista(String nome, Categoria tipo, Genero generoMusical, int totalAlbuns) {
+    public Artista(String nome, Categoria tipo, Genero generoMusical) {
         this.nome = nome;
         this.tipo = tipo;
         this.genero = generoMusical;
-        this.totalAlbuns = totalAlbuns;
+
     }
 
     public Long getId() {
@@ -61,14 +71,6 @@ public class Artista {
         this.genero = genero;
     }
 
-    public int getTotalAlbuns() {
-        return totalAlbuns;
-    }
-
-    public void setTotalAlbuns(int totalAlbuns) {
-        this.totalAlbuns = totalAlbuns;
-    }
-
     public List<Musica> getMusicas() {
         return musicas;
     }
@@ -84,7 +86,6 @@ public class Artista {
                 ", nome='" + nome + '\'' +
                 ", tipo=" + tipo +
                 ", genero=" + genero +
-                ", totalAlbuns=" + totalAlbuns +
                 ", musicas=" + musicas +
                 '}';
     }

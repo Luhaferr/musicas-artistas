@@ -14,6 +14,8 @@ public class Musica {
     private Double avaliacao;
     @Enumerated(EnumType.STRING)
     private Genero genero;
+    @ManyToOne
+    private Album album;
 
     public Musica() {
     }
